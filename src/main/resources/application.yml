@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:6969/realms/gms
+          jwk-set-uri: http://localhost:6969/realms/gms/protocol/openid-connect/certs
+
+keycloak:
+  auth-server-url: http://localhost:6969
+  realm: gms
+  resource: 781d3d51-20d1-418e-b861-210d3f75daff
+  credentials:
+    secret: XQNLo587sI4bMTopAjOgG4Mfs1vlFeRX
+  bearer-only: true
+  public-client: false
