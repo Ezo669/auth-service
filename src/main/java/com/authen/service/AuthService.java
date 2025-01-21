@@ -37,7 +37,7 @@ public class AuthService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public AuthorizationResponse initiateAuthorization(AuthorizationRequest request) {
+    public AuthorizationResponse initiateAuthorization(AuthorizationRequest request, String username, String passwd) {
         String authUrl = String.format("%s/realms/%s/protocol/openid-connect/auth", authServerUrl, realm);
         cacheCodeChallenge.put(request.getState(), request.getCodeVerifier());
 
@@ -76,12 +76,12 @@ public class AuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                tokenUrl,
-                HttpMethod.POST,
-                request,
-                String.class
-        );
+//        ResponseEntity<String> response = restTemplate.exchange(
+//                tokenUrl,
+//                HttpMethod.POST,
+//                request,
+//                String.class
+//        );
 
     }
 

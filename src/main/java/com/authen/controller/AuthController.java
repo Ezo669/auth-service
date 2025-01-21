@@ -25,7 +25,7 @@ public class AuthController {
     public ResponseEntity<Object> initiateAuthorization(
             @RequestBody AuthorizationRequest request) {
         try {
-            var response = authService.initiateAuthorization(request);
+            var response = authService.initiateAuthorization(request, null, null);
             // xử lý bypass keycloark bằng hàm getTokenUsingClientCredentials
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -35,6 +35,7 @@ public class AuthController {
 
     @PostMapping("/public/token")
     public ResponseEntity<TokenResponse> getToken(@RequestBody TokenRequest tokenRequest) {
+        log.info("Get token request: {}", tokenRequest);
         try {
             TokenResponse tokenResponse = authService.getToken(tokenRequest);
             return ResponseEntity.ok(tokenResponse);
