@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Login Page</title>
+</head>
+<body>
+<h1>Login</h1>
+<form id="loginForm" th:action="@{/login}" method="post">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> <label for="username">Username:</label>
+  <input type="text" id="username" name="username">
+  <br>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password">
+  <br>
+  <button type="submit">Login</button>
+</form>
+
+<div id="iframe-container"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#loginForm').submit(function(event) {
+      event.preventDefault();
+
+      // Gửi yêu cầu đăng nhập đến backend
+      $.ajax({
+        url: '/login',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+          if (response.success) {
+            // Đăng nhập thành công, nhúng iframe
+            $('#iframe-container').html('<iframe src="/public/token"></iframe>');
+          } else {
+            alert('Tên đăng nhập hoặc mật khẩu không đúng');
+          }
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
