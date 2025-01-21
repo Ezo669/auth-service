@@ -30,7 +30,6 @@
         data: $(this).serialize(),
         success: function(response) {
           if (response.success) {
-            // Đăng nhập thành công, nhúng iframe
             $('#iframe-container').html('<iframe src="/public/token"></iframe>');
           } else {
             alert('Tên đăng nhập hoặc mật khẩu không đúng');

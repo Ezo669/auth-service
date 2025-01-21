@@ -26,7 +26,6 @@ public class AuthService {
 
     @Value("${keycloak.auth-server-url}")
     private String authServerUrl;
-
     @Value("${keycloak.realm}")
     private String realm;
     @Value("${keycloak.resource}")
@@ -63,7 +62,7 @@ public class AuthService {
     }
 
     @PostConstruct
-    public void getTokenUsingClientCredentials() {
+    public String getTokenUsingClientCredentials() {
         String tokenUrl = String.format("%s/realms/%s/protocol/openid-connect/token", authServerUrl, realm);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -76,12 +75,14 @@ public class AuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-//        ResponseEntity<String> response = restTemplate.exchange(
-//                tokenUrl,
-//                HttpMethod.POST,
-//                request,
-//                String.class
-//        );
+        ResponseEntity<String> response = restTemplate.exchange(
+                tokenUrl,
+                HttpMethod.POST,
+                request,
+                String.class
+        );
+
+        return response.getBody();
 
     }
 
@@ -112,41 +113,6 @@ public class AuthService {
         } catch (Exception e) {
             log.error("Error getting token from Keycloak", e);
             throw new RuntimeException("Failed to get token from Keycloak");
-        }
-    }
-
-
-    public TokenResponse login(LoginRequest loginRequest) {
-        try {
-            // 1. Build the token endpoint URL
-            String tokenUrl = String.format("%s/realms/%s/protocol/openid-connect/token", authServerUrl, realm);
-
-            // 2. Create request body
-            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            params.add("grant_type", "password");
-            params.add("client_id", clientId);
-            params.add("client_secret", secretId);
-            params.add("username", loginRequest.getUsername());
-            params.add("password", loginRequest.getPassword());
-            params.add("redirect_uri", "redirectUri");
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-
-            // 3. Send POST request to Keycloak
-            ResponseEntity<TokenResponse> response = restTemplate.exchange(
-                    tokenUrl,
-                    HttpMethod.POST,
-                    request,
-                    TokenResponse.class
-            );
-
-            // 4. Return response from Keycloak
-            return response.getBody();
-        } catch (Exception e) {
-            return null;
         }
     }
 }
